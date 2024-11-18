@@ -1,0 +1,181 @@
+package ControleAmostrasLab;
+
+import ControleAmostrasLab.model.ControleAmostra;
+import ControleAmostrasLab.model.ControleAmostraUrina;
+import ControleAmostrasLab.model.ControleAmostraSangue;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+
+public class Menu {
+    public static void main(String[] args) {
+
+        // Teste da Classe ControleAmostra
+        ControleAmostra amostra1 = new ControleAmostra(1, "Carlos Silva", "Urina", new Date());
+        amostra1.visualizarAmostra();
+
+        // Teste da Classe ControleAmostraUrina
+        ControleAmostraUrina amostraUrina1 = new ControleAmostraUrina(2, "Fernanda Souza", new Date(), "Normal");
+        amostraUrina1.visualizarAmostra();
+        amostraUrina1.atualizarStatus("Em análise");
+        amostraUrina1.inserirResultado("Resultado normal");
+
+        // Teste da Classe ControleAmostraSangue
+        ControleAmostraSangue amostraSangue1 = new ControleAmostraSangue(3, "Pedro Lima", "Sangue", new Date(), 12.5f, 7.8f);
+        amostraSangue1.visualizarAmostra();
+        amostraSangue1.atualizarStatus("Concluída");
+        amostraSangue1.inserirResultado("Hemograma normal");
+
+        // Menu de opções
+        Scanner leia = new Scanner(System.in);
+        ArrayList<ControleAmostra> amostras = new ArrayList<>();
+        int opcao;
+
+        while (true) {
+            System.out.println("*****************************************************");
+            System.out.println("                                                     ");
+            System.out.println("            LABORATÓRIO DE CONTROLE DE AMOSTRAS      ");
+            System.out.println("                                                     ");
+            System.out.println("*****************************************************");
+            System.out.println("                                                     ");
+            System.out.println("            1 - Cadastrar Amostra                    ");
+            System.out.println("            2 - Listar todas as Amostras             ");
+            System.out.println("            3 - Buscar Amostra por ID                ");
+            System.out.println("            4 - Atualizar Status da Amostra          ");
+            System.out.println("            5 - Inserir Resultado da Análise         ");
+            System.out.println("            6 - Excluir Amostra                      ");
+            System.out.println("            7 - Sair                                 ");
+            System.out.println("                                                     ");
+            System.out.println("*****************************************************");
+            System.out.println("Entre com a opção desejada:                          ");
+            System.out.println("                                                     ");
+
+            opcao = leia.nextInt();
+
+            if (opcao == 7) {
+                System.out.println("\nLaboratório de Controle de Amostras - Até logo!");
+                leia.close();
+                System.exit(0);
+            }
+
+            switch (opcao) {
+                case 1:
+                    System.out.println("Cadastrar Amostra\n\n");
+                    System.out.print("Nome do cliente: ");
+                    leia.nextLine();  
+                    String nomeCliente = leia.nextLine();
+                    System.out.print("Tipo de amostra: ");
+                    String tipoAmostra = leia.nextLine();
+                    System.out.print("Data de recebimento (dd/mm/aaaa): ");
+                    String dataString = leia.nextLine();
+
+                    Date dataRecebimento = new Date(); 
+                    ControleAmostra novaAmostra = new ControleAmostra(amostras.size() + 1, nomeCliente, tipoAmostra, dataRecebimento);
+                    amostras.add(novaAmostra);
+                    System.out.println("Amostra cadastrada com sucesso!\n\n");
+                    break;
+
+                case 2:
+                    System.out.println("Listar todas as Amostras\n\n");
+                    if (amostras.isEmpty()) {
+                        System.out.println("Nenhuma amostra cadastrada.\n");
+                    } else {
+                        for (ControleAmostra amostra : amostras) {
+                            amostra.visualizarAmostra();
+                        }
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Buscar Amostra por ID\n\n");
+                    System.out.print("Informe o ID da amostra: ");
+                    int idBusca = leia.nextInt();
+                    boolean encontrado = false;
+                    for (ControleAmostra amostra : amostras) {
+                        if (amostra.getId() == idBusca) {
+                            amostra.visualizarAmostra();
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!encontrado) {
+                        System.out.println("Amostra não encontrada.\n");
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Atualizar Status da Amostra\n\n");
+                    System.out.print("Informe o ID da amostra: ");
+                    int idStatus = leia.nextInt();
+                    leia.nextLine(); 
+                    boolean statusAtualizado = false;
+                    for (ControleAmostra amostra : amostras) {
+                        if (amostra.getId() == idStatus) {
+                            System.out.print("Informe o novo status: ");
+                            String novoStatus = leia.nextLine();
+                            amostra.atualizarStatus(novoStatus);
+                            statusAtualizado = true;
+                            System.out.println("Status atualizado com sucesso!\n");
+                            break;
+                        }
+                    }
+                    if (!statusAtualizado) {
+                        System.out.println("Amostra não encontrada.\n");
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Inserir Resultado da Análise\n\n");
+                    System.out.print("Informe o ID da amostra: ");
+                    int idResultado = leia.nextInt();
+                    leia.nextLine(); 
+                    boolean resultadoInserido = false;
+                    for (ControleAmostra amostra : amostras) {
+                        if (amostra.getId() == idResultado) {
+                            System.out.print("Informe o resultado da análise: ");
+                            String resultado = leia.nextLine();
+                            amostra.inserirResultado(resultado);
+                            resultadoInserido = true;
+                            System.out.println("Resultado inserido com sucesso!\n");
+                            break;
+                        }
+                    }
+                    if (!resultadoInserido) {
+                        System.out.println("Amostra não encontrada.\n");
+                    }
+                    break;
+
+                case 6:
+                    System.out.println("Excluir Amostra\n\n");
+                    System.out.print("Informe o ID da amostra a ser excluída: ");
+                    int idExcluir = leia.nextInt();
+                    boolean amostraExcluida = false;
+                    for (int i = 0; i < amostras.size(); i++) {
+                        if (amostras.get(i).getId() == idExcluir) {
+                            amostras.remove(i);
+                            amostraExcluida = true;
+                            System.out.println("Amostra excluída com sucesso!\n");
+                            break;
+                        }
+                    }
+                    if (!amostraExcluida) {
+                        System.out.println("Amostra não encontrada.\n");
+                    }
+                    break;
+
+                default:
+                    System.out.println("\nOpção Inválida!\n");
+                    break;
+            }
+        }
+    }
+
+    public static void sobre() {
+        System.out.println("\n*********************************************************");
+        System.out.println("Projeto Desenvolvido por: Raquel Morabito");
+        System.out.println("Raquel Morabito - raquelmorabito@hotmail.com");
+        System.out.println("github.com/raquelmorabito");
+        System.out.println("*********************************************************");
+    }
+}

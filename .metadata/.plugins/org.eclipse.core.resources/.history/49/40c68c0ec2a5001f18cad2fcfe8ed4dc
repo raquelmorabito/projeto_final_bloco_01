@@ -1,0 +1,31 @@
+package ControleAmostrasLab.model;
+
+import java.util.Date;
+
+public class ControleAmostraSangue extends ControleAmostra {
+
+    private String tipoSangue;
+
+    // Construtor correto para ControleAmostraSangue
+    public ControleAmostraSangue(int id, String nomeCliente, Date dataRecebimento, String tipoSangue) {
+        super(id, nomeCliente, "Sangue", dataRecebimento);
+        this.tipoSangue = tipoSangue;
+    }
+
+    // Getter e Setter para tipoSangue
+    public String getTipoSangue() {
+        return tipoSangue;
+    }
+
+    public void setTipoSangue(String tipoSangue) {
+        this.tipoSangue = tipoSangue;
+    }
+
+    // Método para exibir as informações da amostra de sangue
+    @Override
+    public void visualizarAmostra() {
+        super.visualizarAmostra();
+        System.out.println("Tipo de Sangue: " + this.tipoSangue);
+    }
+}
+
