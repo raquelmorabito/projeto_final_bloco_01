@@ -128,16 +128,9 @@ public class Menu {
         System.out.print("\nInforme o ID da amostra para atualizar o status: ");
         int id = leia.nextInt();
         leia.nextLine(); 
-
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            System.out.print("Informe o novo status da amostra: ");
-            String status = leia.nextLine();
-            controller.atualizarStatus(id, status);
-        }
-
+        System.out.print("Informe o novo status da amostra: ");
+        String status = leia.nextLine();
+        controller.atualizarStatus(id, status);
         keyPress();
     }
 
@@ -145,30 +138,16 @@ public class Menu {
         System.out.print("\nInforme o ID da amostra para inserir o resultado da análise: ");
         int id = leia.nextInt();
         leia.nextLine(); 
-
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            System.out.print("Resultado da análise: ");
-            String resultado = leia.nextLine();
-            controller.inserirResultado(id, resultado);
-        }
-
+        System.out.print("Resultado da análise: ");
+        String resultado = leia.nextLine();
+        controller.inserirResultado(id, resultado);
         keyPress();
     }
 
     public static void excluirAmostra(ControleAmostrasLabController controller) {
         System.out.print("\nInforme o ID da amostra para exclusão: ");
         int id = leia.nextInt();
-
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            controller.deletar(id);
-        }
-
+        controller.deletar(id);
         keyPress();
     }
 

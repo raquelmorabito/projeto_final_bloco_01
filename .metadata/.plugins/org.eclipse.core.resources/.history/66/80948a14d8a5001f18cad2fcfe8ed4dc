@@ -6,7 +6,6 @@ import ControleAmostrasLab.model.ControleAmostraSangue;
 import ControleAmostrasLab.model.ControleAmostraUrina;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -20,6 +19,11 @@ public class Menu {
         ControleAmostrasLabController controller = new ControleAmostrasLabController();
         int opcao;
 
+        // Remova as linhas abaixo para não cadastrar amostras automaticamente:
+        // controller.cadastrar(new ControleAmostraSangue(1, "João Silva", "O+", new Date()));
+        // controller.cadastrar(new ControleAmostraUrina(2, "Maria Souza", new Date(), "Clara"));
+
+        // Menu principal
         while (true) {
             System.out.println("*****************************************************");
             System.out.println("            LABORATÓRIO DE CONTROLE DE AMOSTRAS      ");
@@ -37,7 +41,7 @@ public class Menu {
                 opcao = leia.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("\nErro: Entrada inválida. Por favor, digite um número inteiro.");
-                leia.nextLine(); 
+                leia.nextLine(); // Limpa o buffer
                 continue;
             }
 
@@ -58,9 +62,10 @@ public class Menu {
         }
     }
 
+
     public static void cadastrarAmostra(ControleAmostrasLabController controller) {
         System.out.println("\nCadastrar Amostra");
-        leia.nextLine(); 
+        leia.nextLine(); // Limpa o buffer
         System.out.print("Nome do cliente: ");
         String nomeCliente = leia.nextLine();
         System.out.print("Tipo de amostra (Sangue ou Urina): ");
@@ -68,41 +73,11 @@ public class Menu {
 
         ControleAmostra novaAmostra = null;
         if (tipoAmostra.equalsIgnoreCase("Sangue")) {
-            System.out.print("ID da amostra: ");
-            int idSangue = leia.nextInt(); 
-            leia.nextLine(); 
             System.out.print("Tipo sanguíneo (ex.: O+): ");
             String tipoSanguineo = leia.nextLine();
-            System.out.print("Data da coleta (formato dd/MM/yyyy): ");
-            String dataColetaSangue = leia.nextLine(); 
-
-            Date dataColeta = null;
-            try {
-                SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
-                dataColeta = formatoData.parse(dataColetaSangue);
-            } catch (Exception e) {
-                System.out.println("Erro ao formatar a data.");
-            }
-
-            novaAmostra = new ControleAmostraSangue(idSangue, nomeCliente, tipoSanguineo, dataColeta);
+            novaAmostra = new ControleAmostraSangue(controller.getAmostras().size() + 1, nomeCliente, tipoSanguineo, new Date());
         } else if (tipoAmostra.equalsIgnoreCase("Urina")) {
-            System.out.print("ID da amostra: ");
-            int idUrina = leia.nextInt(); 
-            leia.nextLine(); 
-            System.out.print("Data da coleta (formato dd/MM/yyyy): ");
-            String dataColetaUrina = leia.nextLine(); 
-            System.out.print("Cor da urina (ex.: Amarela): ");
-            String corUrina = leia.nextLine(); 
-
-            Date dataColeta = null;
-            try {
-                SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
-                dataColeta = formatoData.parse(dataColetaUrina);
-            } catch (Exception e) {
-                System.out.println("Erro ao formatar a data.");
-            }
-
-            novaAmostra = new ControleAmostraUrina(idUrina, nomeCliente, dataColeta, corUrina);
+            novaAmostra = new ControleAmostraUrina(controller.getAmostras().size() + 1, nomeCliente, new Date(), "Normal");
         }
 
         if (novaAmostra != null) {
@@ -115,69 +90,71 @@ public class Menu {
     }
 
     public static void buscarAmostraPorID(ControleAmostrasLabController controller) {
-        System.out.print("\nInforme o ID da amostra para busca: ");
-        int id = leia.nextInt();
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra != null) {
-            amostra.visualizarAmostra();
+        System.out.println("\nBuscar Amostra por ID");
+        System.out.print("Informe o ID da amostra: ");
+
+        try {
+            int idBusca = leia.nextInt();
+            ControleAmostra amostraEncontrada = controller.buscarPorId(idBusca);
+
+            if (amostraEncontrada != null) {
+                amostraEncontrada.visualizarAmostra();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("\nErro: ID inválido. Por favor, insira um número inteiro.");
+            leia.nextLine(); // Limpar buffer
+        } finally {
+            keyPress();
         }
-        keyPress();
     }
 
     public static void atualizarStatusAmostra(ControleAmostrasLabController controller) {
-        System.out.print("\nInforme o ID da amostra para atualizar o status: ");
+        System.out.println("\nAtualizar Status da Amostra");
+        System.out.print("Informe o ID da amostra: ");
         int id = leia.nextInt();
-        leia.nextLine(); 
+        leia.nextLine(); // Limpa o buffer
+        System.out.print("Novo status: ");
+        String status = leia.nextLine();
 
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            System.out.print("Informe o novo status da amostra: ");
-            String status = leia.nextLine();
-            controller.atualizarStatus(id, status);
-        }
-
+        controller.atualizarStatus(id, status);
         keyPress();
     }
 
     public static void inserirResultadoAnalise(ControleAmostrasLabController controller) {
-        System.out.print("\nInforme o ID da amostra para inserir o resultado da análise: ");
+        System.out.println("\nInserir Resultado da Análise");
+        System.out.print("Informe o ID da amostra: ");
         int id = leia.nextInt();
-        leia.nextLine(); 
+        leia.nextLine(); // Limpa o buffer
+        System.out.print("Resultado da análise: ");
+        String resultado = leia.nextLine();
 
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            System.out.print("Resultado da análise: ");
-            String resultado = leia.nextLine();
-            controller.inserirResultado(id, resultado);
-        }
-
+        controller.inserirResultado(id, resultado);
         keyPress();
     }
 
     public static void excluirAmostra(ControleAmostrasLabController controller) {
-        System.out.print("\nInforme o ID da amostra para exclusão: ");
+        System.out.println("\nExcluir Amostra");
+        System.out.print("Informe o ID da amostra: ");
         int id = leia.nextInt();
 
-        ControleAmostra amostra = controller.buscarPorId(id);
-        if (amostra == null) {
-            System.out.println("Erro: Amostra não encontrada.");
-        } else {
-            controller.deletar(id);
-        }
-
+        controller.deletar(id);
         keyPress();
     }
 
+public static void sobre() {
+    System.out.println("\n*********************************************************");
+    System.out.println("Projeto Desenvolvido por: Raquel Morabito ");
+    System.out.println("Raquel Morabito - raquelmorabito@hotmail.com");
+    System.out.println("github.com/raquelmorabito");
+    System.out.println("*********************************************************");
+}
     public static void keyPress() {
-        System.out.println("Pressione qualquer tecla para continuar...");
         try {
+            System.out.println("\nPressione Enter para continuar...");
             System.in.read();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erro ao pressionar Enter.");
         }
     }
 }
+
